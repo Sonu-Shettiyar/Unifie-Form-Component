@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Radio, Form, Input, DatePicker, Checkbox } from 'antd';
+import { Radio, Form, Input, DatePicker, Checkbox, Button, message } from 'antd';
+import axios from 'axios';
 
+const BASE_URL = 'http://localhost:3000/'
 const FormComponent = () => {
     const [form] = Form.useForm();
     const [anyBankIn, setAnyBankIn] = useState('');
@@ -24,9 +26,46 @@ const FormComponent = () => {
         PackingList: null,
         CertificateofOriginissuedandvisaedby: null
     })
+
+    const [insurancePolicy, setInsurancePolicy] = useState();
+
+    const [insuranceRisks, setInsuranceRisks] = useState('')
+
+
+    const [periodOfPresentation, setPeriodOfPresentation] = useState('');
+
+    const [periodOfPresentationAfterDate, setPeriodOfPresentationAfterDate] = useState('');
+
+    const [placeAndDate, setplaceAndDate] = useState();
+
+    const handleFormSubmit = async () => {
+        try {
+            const formValues = form.getFieldsValue();
+            const payload = {
+                ...formValues,
+                originalDocuments,
+                copyDocuments,
+                certificateIssuedBy,
+                insurancePolicy,
+                insuranceRisks,
+                periodOfPresentation,
+                periodOfPresentationAfterDate,
+                placeAndDate
+            }
+            const res = await axios.post(BASE_URL, payload)
+            message.success(res.data || 'Form Submitted Succesfully!')
+        } catch (error) {
+            console.log(error)
+            message.error(error.message || 'Something Went Wrong, Please try again')
+        }
+
+
+
+
+    }
     return (
         <div id='main-container'>
-            <Form form={form}>
+            <Form form={form} >
                 <div className='flex-div'>
                     <h2>To CREDIT SUISSE (Switzerland) Ltd. Trade Finance Service Center: </h2>
 
@@ -595,13 +634,13 @@ const FormComponent = () => {
                         <div className='flex-div justify-between' >
                             <Form.Item style={{ marginTop: '20px' }}>
                                 <Checkbox.Group className='flex-column'>
-                                    <Checkbox>
+                                    <Checkbox value={'                          Commercial Invoice'}>
                                         Commercial Invoice
                                     </Checkbox>
-                                    <Checkbox>
+                                    <Checkbox value="Packing List">
                                         Packing List
                                     </Checkbox>
-                                    <Checkbox>
+                                    <Checkbox value={" Certificate of Origin issued and/or visaed by"}>
                                         Certificate of Origin issued and/or visaed by
                                     </Checkbox>
 
@@ -655,19 +694,436 @@ const FormComponent = () => {
                                 </Radio.Group>
                             </Form.Item>
                             <div >
-                            <Checkbox /> Certificate of Origin Form A (GSP)
-                           </div>
+                                <Checkbox /> Certificate of Origin Form A (GSP)
+                            </div>
 
-                            <Form.Item name={'certificateOfOrigin'} style={{marginLeft:'50px'}}>
+                            <Form.Item name={'certificateOfOrigin'} style={{ marginLeft: '50px' }}>
                                 Evidencing goods of <Input style={{ width: '200px', margin: '10px' }} /> origin
                             </Form.Item>
                         </div>
 
                     </div>
 
+
+                    <div>
+                        <p>
+                            Covering Multimodal Transport
+                        </p>
+                    </div>
+                    <div className='flex-div'>
+
+                        <Form.Item name={'coveringMultimodalTransportFullSetOf'}>
+                            <Checkbox >
+                                Full set of
+                            </Checkbox>
+
+                        </Form.Item>
+                        <Form.Item name={'coveringMultimodalTransport'}>
+                            <Radio.Group name='coveringMultimodalTransport'>
+                                <Radio value={'Multimodal transport document'}>
+                                    Multimodal transport document
+                                </Radio>
+
+                                <Radio value={'other'}>
+                                    Other
+                                </Radio>                            </Radio.Group>
+                        </Form.Item>
+
+
+                    </div>
+
+
+                    <div>
+                        <p>
+                            Covering seafreight
+                        </p>
+                    </div>
+                    <div>
+
+                        <div className='flex-div'>
+
+                            <Form.Item name={'coveringSeafreightFullSetOf'}>
+                                <Checkbox >
+                                    Full set of
+                                </Checkbox>
+
+                            </Form.Item>
+                            <Form.Item name='coveringMultimodalTransport'>
+                                <Radio.Group name='coveringMultimodalTransport'>
+                                    <Radio value={'Marine Bill of Lading'}>
+                                        Marine Bill of Lading
+                                    </Radio>
+                                </Radio.Group>
+                            </Form.Item>
+                        </div>
+                        <br />
+                        <div>
+                            <Form.Item name={'Made out to order and blank endorsed'}>
+                                <Radio>
+                                    Made out to order and blank endorsed
+                                </Radio>
+                            </Form.Item>
+                            <div className='flex-div align-center'>
+                                <Radio>
+                                    Made out to order of
+
+                                </Radio>
+                                <Form.Item name={'Made out to order of'} >
+                                    <Input style={{ marginTop: '10px' }} />
+                                </Form.Item>
+                            </div>
+
+                            <div className='flex-div align-center'>
+                                <Radio>
+                                    consigned to
+                                </Radio>
+                                <Form.Item name={'consigned to'}>
+                                    <Input />
+                                </Form.Item>
+                            </div>
+
+                        </div>
+                        <div className='flex-div '>
+                            <div>
+                                <Checkbox>
+                                    Notify
+                                </Checkbox>
+                            </div>
+                            <Form.Item name={'Notify'}>
+                                <Input />
+                            </Form.Item>
+                        </div>
+                        <div className='flex-div '>
+                            <div>
+                                <Checkbox>
+                                    Marked
+                                </Checkbox>
+                            </div>
+                            <Form.Item name={'Marked'}>
+                                <Radio.Group>
+                                    <Radio value={'Freight collect'}>
+                                        Freight collect
+                                    </Radio>
+                                    <Radio value={'Freight prepaid'}>
+                                        Freight prepaid
+                                    </Radio>
+                                </Radio.Group>
+                            </Form.Item>
+                        </div>
+                        <div className='flex-div '>
+                            <div>
+                                <Checkbox>
+                                    Issued by
+                                </Checkbox>
+                            </div>
+                            <Form.Item name={'Issued by'} className='full-width'>
+                                <Input />
+                            </Form.Item>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <p>
+                            Covering airfreight
+                            <br />
+                            Covering Inlandfreight
+
+                        </p>
+                    </div>
+                    <div className='bottom-border'>
+                        <Form.Item name={'Airwaybill (Original for shipper)'}>
+                            <Checkbox >
+                                Airwaybill (Original for shipper)
+
+                            </Checkbox>
+                        </Form.Item>
+                        <div>
+                            <Form.Item name={'Covering Inlandfreight'}>
+                                <Checkbox.Group >
+
+
+                                    <Checkbox
+                                        value={"Forwarder's Certificate of Receipt (FCR)"}
+                                    >
+                                        Forwarder's Certificate of Receipt (FCR)
+                                    </Checkbox>
+                                    <Checkbox
+                                        value={"International Road Waybill (CMR)"}
+                                    >
+                                        International Road Waybill (CMR)
+                                    </Checkbox>
+                                    <br />
+                                    <Checkbox
+                                        value="
+                                        Duplicate Railwaybill
+                                    ">
+                                        Duplicate Railwaybill
+                                    </Checkbox>
+                                    <Checkbox value={"Courier Receipt consigned to"}>
+                                        Courier Receipt consigned to
+                                    </Checkbox>
+                                </Checkbox.Group>
+                                <Input />
+                            </Form.Item>
+                            <div className='flex-div '>
+                                <div>
+                                    <Checkbox value={"Notify"}>
+
+                                        Notify
+                                    </Checkbox>
+                                </div>
+                                <Form.Item name={'InlandfreightNotify'}>
+                                    <Input />
+                                </Form.Item>
+                            </div>
+                            <div className='flex-div '>
+                                <div>
+                                    <Checkbox value={"Marked"}>
+                                        Marked
+                                    </Checkbox>
+                                </div>
+                                <Form.Item name={'InlandfreightMarked'}>
+                                    <Radio.Group>
+                                        <Radio value={'InlandfreightFreight collect'}>
+                                            Freight collect
+                                        </Radio>
+                                        <Radio value={'InlandfreightFreight prepaid'}>
+                                            Freight prepaid
+                                        </Radio>
+                                    </Radio.Group>
+                                </Form.Item>
+                            </div>
+                            <div className='flex-div bottom-border '>
+                                <div>
+                                    <Checkbox>
+                                        Issued by
+                                    </Checkbox>
+                                </div>
+                                <Form.Item name={'InlandfreightIssued by'} className='full-width'>
+                                    <Input />
+                                </Form.Item>
+                            </div>
+
+                            <div>
+                                <Form.Item name={'InlandfreightInsurance'}>
+                                    <Checkbox.Group>
+
+                                        <Checkbox value={' Insurance cover taken care by the applicant'}>
+                                            Insurance cover taken care by the applicant
+                                        </Checkbox>
+
+                                        <Checkbox value={` Insurance policy or certificate covering ${insurancePolicy} % of goods value and the following risks ${insuranceRisks}`}>
+                                            Insurance policy or certificate covering
+                                            <Input value={insurancePolicy} onChange={(e) => setInsurancePolicy(e.target.value)} type='number' style={{ width: '50px', margin: "10px" }} />
+                                            % of goods value and the following risks
+                                            <Input value={insuranceRisks} onChange={(e) => setInsuranceRisks(e.target.value)} type='text' style={{ margin: "10px" }} />
+                                        </Checkbox>
+                                    </Checkbox.Group>
+                                </Form.Item>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div className='bottom-border'>
+                        <p>
+                            Other documents
+                            (further docs in the attachment)
+                        </p>
+                    </div>
+                    <div className='flex-div'>
+                        <div>
+                            <Checkbox />
+
+                        </div>
+                        <Form.Item className='full-width' name={'Other documents                            (further docs in the attachment)'}>
+                            <Input />
+                        </Form.Item>
+                    </div>
+
+
+                    <div className='bottom-border'>
+                        <p>
+                            47A: Additional Conditions
+                        </p>
+                    </div>
+                    <div className='flex-div'>
+                        <Form.Item className='full-width' name={'47A: Additional Conditions'}>
+                            <Input.TextArea />
+                        </Form.Item>
+                    </div>
+
+
+                    <div className='bottom-border'>
+                        <p>
+                            71B: Charges
+                        </p>
+                    </div>
+                    <div className='flex-div'>
+                        <Form.Item className='full-width' name={'71B: Charges'}>
+
+                            <Checkbox.Group>
+                                <Checkbox value={" All commissions and charges for our account"}>
+                                    All commissions and charges for our account
+
+                                </Checkbox>
+                                <Checkbox value={"All commissions and charges for Beneficiary's account"}>
+                                    All commissions and charges for Beneficiary's account
+
+                                </Checkbox>
+                                <Checkbox value={"Your (Credit Suisse) charges for our account, foreign bank charges for beneficiary's account"}>
+                                    Your (Credit Suisse) charges for our account, foreign bank charges
+                                    for beneficiary's account
+                                </Checkbox>
+                            </Checkbox.Group>
+                        </Form.Item>
+                    </div>
+
+
+
+
+                    <div className='bottom-border'>
+                        <p>
+                            Field 48: Period for Presentation
+                        </p>
+                    </div>
+                    <div>
+                        <div className='flex-div'>
+                            <Form.Item className='full-width' name={'Field 48: Period for Presentation'}>
+
+                                <Checkbox.Group>
+                                    <Checkbox value={"Documents to be presented within"}>
+                                        All commissions and charges for our account
+
+                                    </Checkbox>
+                                </Checkbox.Group>
+                            </Form.Item>
+                            <Form.Item >
+                                <Radio.Group className='flex-div'>
+                                    <Radio value={"21 Days"}>21 Days</Radio>
+                                    <Radio value={`${periodOfPresentation}`}>
+                                        Other:
+                                        <Input value={periodOfPresentation} onChange={(e) => setPeriodOfPresentation(e.target.value)} />
+                                    </Radio>
+                                </Radio.Group>
+                            </Form.Item>
+                        </div>
+                        <br />
+                        <div className='flex-div' style={{ justifyContent: 'space-evenly' }}>
+                            After the date of:
+                            <Form.Item name={"After the date of:"}>
+                                <Radio.Group className='flex-div'>
+                                    <Radio value={"Transport document"}>Transport document</Radio>
+                                    <Radio value={`${periodOfPresentationAfterDate}`}>
+                                        Other:
+                                        <Input value={periodOfPresentationAfterDate} onChange={(e) => setPeriodOfPresentationAfterDate(e.target.value)} />
+                                    </Radio>
+                                </Radio.Group>
+                            </Form.Item>
+                        </div>
+                    </div>
+
+
+
+                    <div className='bottom-border'>
+                        <p>
+                            49: Confirmation Instructions
+                        </p>
+                    </div>
+                    <div className='flex-div'>
+
+                        <Form.Item className='full-width justify-between' name={'49: Confirmation Instructions'}>
+                            <Checkbox.Group>
+                                Correspondent bank to
+                                <Checkbox value="
+                                Add their confirmation
+                                ">
+                                    Add their confirmation
+
+                                </Checkbox>
+
+                                <Checkbox value={"Not to add their confirmation"}>
+                                    Not to add their confirmation
+                                </Checkbox>
+                            </Checkbox.Group>
+                        </Form.Item>
+                    </div>
+
+
+                    <div className='bottom-border'>
+                        <p>
+                            Other Conditions / Remarks
+                            (attachment if needed)
+                        </p>
+                    </div>
+                    <div className='flex-div'>
+
+                        <Form.Item className='full-width justify-between' name={'Other Conditions / Remarks                            (attachment if needed) '}>
+                            <Input.TextArea />
+                        </Form.Item>
+                    </div>
+
+
+                    <div className='bottom-border'>
+                        <p>
+                            72: Sender to Receiver Information
+                        </p>
+                    </div>
+                    <div >
+                        Documents to be sent to Credit Suisse as follows:
+                        <br />
+                        <Form.Item className='full-width justify-between' name={'72: Sender to Receiver Information'} style={{ marginLeft: '10%' }}>
+
+                            <Checkbox.Group>
+                                <Checkbox value="
+                                    By courier service in
+                                    ">
+                                    By courier service in
+                                </Checkbox>
+                                <Checkbox value={"                               By registered mail in"}>
+                                    By registered mail in
+                                </Checkbox>
+                            </Checkbox.Group>
+                        </Form.Item>
+                        <Form.Item name={'courier lots'} style={{ marginLeft: '20%' }}>
+                            <Radio.Group>
+                                <Radio value={"1 lot"}>
+                                    1 lot
+                                </Radio>
+                                <Radio value={'2 lot'}>
+                                    2 lot
+                                </Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                    </div>
                 </div>
-            </Form>
-        </div>
+            </Form >
+            <div style={{ width: '100%', textAlign: 'end' }}>
+                <p>
+                    You are authorized to debit our account directly
+
+                </p>
+            </div>
+
+            <div className='flex-div justify-between' style={{ margin: '30px' }} >
+                <div className='flex-div align-center'>
+                    <p>
+                        Place and Date:</p> <Input style={{ width: '400px' }} value={placeAndDate} onChange={(e) => setplaceAndDate(e.target.value)} />
+                </div>
+
+                <div>
+                    <p>
+                        Stamp and Signature of the Applicant
+                    </p>
+                </div>
+            </div>
+            <div>
+                <Button style={{ width: '100%', backgroundColor: 'black', color: 'white' }} onClick={handleFormSubmit}>
+                    Submit
+                </Button>
+            </div>
+        </div >
     );
 };
 
