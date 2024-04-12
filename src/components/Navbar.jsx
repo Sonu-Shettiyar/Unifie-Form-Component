@@ -1,11 +1,11 @@
 import React from 'react'
 import { Button } from 'antd';
 
-const Navbar = () => {
+const Navbar = ({ printPage }) => {
     return (
         <div id='navbar'>
 
-            <Button>Print</Button>
+            <Button onClick={printPage}>Print</Button>
             <Button>Reset</Button>
 
         </div>

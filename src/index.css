@@ -1,10 +1,10 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: "Poppins", sans-serif;
 }
 
 #outter-main {
-  /* border: 1px solid black; */
   background-color: rgba(9, 9, 9, 0.804);
 }
 
@@ -68,14 +68,14 @@ p {
 
 .bottom-border.two-columns>div:nth-child(odd) {
   background-color: #BEBCBC;
-  text-align: right;
+  text-align: left;
   padding: 10px;
   border-bottom: 1px solid white;
 
 }
 
 .bottom-border.two-columns>div:nth-child(even) {
-
+  font-style: normal;
   padding: 10px;
 }
 

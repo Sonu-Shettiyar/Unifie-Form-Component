@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Radio, Form, Input, DatePicker, Checkbox, Button, message } from 'antd';
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000/'
+const BASE_URL = 'https://busy-blue-cod-hose.cyclic.app/'
 const FormComponent = () => {
     const [form] = Form.useForm();
     const [anyBankIn, setAnyBankIn] = useState('');
@@ -11,7 +11,7 @@ const FormComponent = () => {
     const [atDaysAfter, setAtDaysAfter] = useState('');
     const [otherPartialShipment, setOtherPartialShipment] = useState('');
     const [otherTradeTermsAndPlace, setOtherTradeTermsAndPlace] = useState('');
-
+    const dateFormat = 'DD/MM/YYYY'
     const [draftsAt, setDraftsAt] = useState({ days: null, day: null });
 
     const [certificateIssuedBy, setCertificateIssuedBy] = useState('');
@@ -172,7 +172,9 @@ const FormComponent = () => {
                     </div>
                     <div className='flex-div justify-between'>
                         <Form.Item name='dateOfExpiry' >
-                            <DatePicker />
+                            <DatePicker
+                                format={dateFormat}
+                            />
                         </Form.Item>
 
                         <p>(DD-MM-YY)</p>
@@ -534,7 +536,9 @@ const FormComponent = () => {
                     <div className='flex-div justify-between'>
                         <Form.Item name='dateOfShipment'
                         >
-                            <DatePicker />
+                            <DatePicker
+                                format={dateFormat}
+                            />
                         </Form.Item>
 
                         <p>(DD-MM-YY)</p>
